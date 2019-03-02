@@ -1,0 +1,267 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+        <ion-buttons slot="end">
+          <a  class="textLogo" [routerLink]="['/home']"><p>قاموس بحر</p></a>
+          <ion-img class="imgLogo" src="assets/b7r.svg"></ion-img>
+        </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+
+<ion-content>
+    <ion-buttons class="countNavSearch">
+      <img class="flagImg" src="assets/de.svg">
+      <ion-searchbar (ionInput)="onInput($event)" #searchbar [(ngModel)]="searcgWord" (search)="doSearch ($event)"  class="inputSearch" type="search"></ion-searchbar>
+      <ion-button (click)="doSearch ($event)" class="buttontSearch">بحث</ion-button>
+    </ion-buttons>
+  
+  <div id="listAutoComplate" dir="rtl" *ngIf="textAlign">
+    <li class="item-autocom" *ngFor="let words of autoCom ; index as i" (click)="clickOnAutoComplate(i)">
+      <span class="goToThisWord" [outerHTML]="words | replace"></span>
+    </li>
+  </div>
+  
+  <div id="listAutoComplate" dir="ltr" *ngIf="!(textAlign)">
+    <li class="item-autocom" *ngFor="let words of autoCom ; index as i" (click)="clickOnAutoComplate(i)">
+      <span class="goToThisWord" [outerHTML]="words | replace"></span>
+    </li>
+  </div>
+
+
+  <ion-grid >
+      <ion-row>
+          <div  class="gardOfwords" text-center>
+              <span *ngIf="!isFind">
+                <div>
+                  <span class="leftWordTitle">Search Word</span>
+                  <span class="rightWordTitle">كلمة البحث</span>
+                </div><br><br>
+                  
+                  
+                 <ion-card-content dir='rtl' *ngIf="!arabicWord && result">
+                  <h1 class="parentWord" >🔊{{word}} <mark class="findType">{{result | type}} ⚐</mark></h1>
+                    <br>
+                    <ion-grid *ngIf="nom">
+                      
+                      <ion-row class="titleNom">
+                        <ion-col>
+                          جمع
+                        </ion-col>
+                        <ion-col>
+                          مفرد
+                         </ion-col>
+                      </ion-row>
+                      <ion-row class="contentNom">
+                        <ion-col>
+                          {{nom?.plural}}
+                        </ion-col>
+                        <ion-col>
+                          {{nom?.singular}}
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+             
+
+                    <ion-col *ngFor="let res of result"><p (click)="clickOnResult($event)" class=wordfind>{{res.arabic_word | tashkel}}</p><span class="simecolum"> ،</span></ion-col>
+                 </ion-card-content>
+                
+                 <ion-card-content dir='ltr' *ngIf="arabicWord">
+                    <h1 class="parentWord" >{{word}} 🔊</h1>
+                    <br>
+                    <ion-col *ngFor="let res of result"><p (click)="clickOnResult($event)" class=wordfind><span class=articl>{{res.article}} </span>{{res.lang_word}}</p><span class="simecolum">,</span></ion-col>
+                  </ion-card-content>
+
+                         
+                  <ion-grid *ngIf="adj">
+                      <p class="adjTitle">نهايات كلمة (( <span>{{word}}</span> )) للصفات</p>
+                    <ion-row class="titleNom">
+                      <ion-col>
+                        Superlativ
+                      </ion-col>
+                      <ion-col>
+                        Komparativ
+                       </ion-col>
+                       <ion-col>
+                        Positiv
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="contentNom">
+                      <ion-col *ngFor="let adje of adj">
+                        {{adje}}
+                      </ion-col>
+                    </ion-row>
+                    <p class="adjTitle"> 🔊 اضغط فوق الكلمة للسماع</p>
+                  </ion-grid>
+                 
+
+
+              </span>
+
+              <span *ngIf='isFind'>
+                <div>
+                  <span class="leftWordTitle">Search Word</span>
+                  <span class="rightWordTitle">كلمة البحث</span>
+                </div>
+                  <br><br>
+                 <ion-card-content dir='ltr'>
+                  <h1  class="parentWord" > هل تقصد ؟</h1>
+                  <br>
+                  <ion-col *ngFor="let mean of find"><p (click)="clickOnResult($event)" class="wordfind">{{mean}}</p><span class="simecolum">,</span></ion-col>
+                </ion-card-content>
+
+              </span>
+          </div>
+
+
+      </ion-row>
+    </ion-grid>
+
+
+<ion-grid *ngIf="similarwords">
+    <ion-row>
+      <div class="gardOfwords gardOfsimilar" text-center>
+          <ion-col *ngFor="let similar of similarwords['verben']"><p class="wordsimilar">{{similar}}</p></ion-col>
+      </div>
+  </ion-row>
+
+  <ion-row>
+      <div class="gardOfwords gardOfsimilar" text-center>
+          <ion-col *ngFor="let similar of similarwords['wordsLikes']"><p class="wordsimilar">{{similar}}</p></ion-col>
+      </div>
+  </ion-row>
+</ion-grid>
+
+
+  
+<ion-grid *ngIf="example_de">
+    <ion-row>
+      <div  class="gardOfwords">
+          <div class="exampleDiv" *ngFor="let examples of example_de">
+              <ion-card-content dir="ltr" class="exampleFeach">
+                <span [outerHTML]="examples['de']| exampcolorde "></span>
+              </ion-card-content>
+              <ion-card-content dir="rtl" class="exampleFeach">
+                <span [outerHTML]=" examples['ar'] | exampcolor "></span>
+              </ion-card-content>
+          </div>
+      </div>
+  </ion-row>
+</ion-grid>
+
+
+
+    <ion-grid *ngIf="indicative">  
+        <ion-row>
+        <div class="gardOfwords">
+          
+          <ion-item-divider class="divider">Indikativ</ion-item-divider>
+          
+          <p class="titleOfVerbs">Präsens Aktiv</p>
+          <ul class="verbsList" *ngFor="let vernList of indicative">
+                <li *ngFor="let verb of vernList.Present"><span class="pron">{{verb.pron}}</span> <span class="verb">{{verb.verb}} 🔊</span>
+            </li>
+          </ul>
+          <p class="titleOfVerbs">Perfekt Aktiv</p>
+          <ul class="verbsList" *ngFor="let vernList of indicative">
+                <li *ngFor="let verb of vernList.Perfect"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+            </li>
+          </ul>
+
+          <p class="titleOfVerbs">Präteritum Aktiv</p>
+          <ul class="verbsList" *ngFor="let vernList of indicative">
+                <li *ngFor="let verb of vernList.Past"><span class="pron">{{verb.pron}}</span> <span class="verb">{{verb.verb}} 🔊</span>
+            </li>
+          </ul>
+
+          <p class="titleOfVerbs">Plusquamperfekt Aktiv</p>
+          <ul class="verbsList" *ngFor="let vernList of indicative">
+                <li *ngFor="let verb of vernList.Pluperfect"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+            </li>
+          </ul>
+
+          <p class="titleOfVerbs">Futur I Aktiv</p>
+          <ul class="verbsList" *ngFor="let vernList of indicative">
+                <li *ngFor="let verb of vernList.Future_I"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+            </li>
+          </ul>
+
+          <p class="titleOfVerbs">Futur II Aktiv</p>
+          <ul class="verbsList" *ngFor="let vernList of indicative">
+                <li *ngFor="let verb of vernList.Future_II"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+            </li>
+          </ul>
+
+        </div>
+
+        <br>
+        <div class="gardOfwords">
+          
+            <ion-item-divider class="divider">Konjunktiv I und II</ion-item-divider>
+            
+            <p class="titleOfVerbs">I Präsens Aktiv</p>
+            <ul class="verbsList" *ngFor="let vernList of conjunctive_I_and_II">
+                  <li *ngFor="let verb of vernList.Present"><span class="pron">{{verb.pron}}</span> <span class="verb">{{verb.verb}} 🔊</span>
+              </li>
+            </ul>
+            <p class="titleOfVerbs">I Perfekt Aktiv</p>
+            <ul class="verbsList" *ngFor="let vernList of conjunctive_I_and_II">
+                  <li *ngFor="let verb of vernList.Perfect"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+              </li>
+            </ul>
+  
+            <p class="titleOfVerbs">II Präteritum Aktiv</p>
+            <ul class="verbsList" *ngFor="let vernList of conjunctive_I_and_II">
+                  <li *ngFor="let verb of vernList.Past"><span class="pron">{{verb.pron}}</span> <span class="verb">{{verb.verb}} 🔊</span>
+              </li>
+            </ul>
+  
+            <p class="titleOfVerbs">II Plusquamperfekt Aktiv</p>
+            <ul class="verbsList" *ngFor="let vernList of conjunctive_I_and_II">
+                  <li *ngFor="let verb of vernList.Pluperfect"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+              </li>
+            </ul>
+  
+          </div>
+          <br>
+
+          <div class="gardOfwords">
+              <ion-item-divider class="divider">Imperativ Aktiv</ion-item-divider>
+              
+              <p class="titleOfVerbs">Präsens Aktiv</p>
+              <ul class="verbsList" *ngFor="let vernList of conditional">
+                    <li *ngFor="let verb of vernList.Present"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+                </li>
+              </ul>
+              <p class="titleOfVerbs">Perfekt Aktiv</p>
+              <ul class="verbsList" *ngFor="let vernList of conditional">
+                    <li *ngFor="let verb of vernList.Perfect"><span class="pron">{{verb.pron}}</span> <span class="verb"><span [outerHTML]="verb.verb | verbs" ></span> 🔊</span>
+                </li>
+              </ul>
+            </div>
+            <br>
+
+            <div class="gardOfwords">
+                <ion-item-divider class="divider">Imperativ</ion-item-divider>
+                
+                <p class="titleOfVerbs">Präsens Aktiv</p>
+                <ul class="verbsList" *ngFor="let vernList of imperative">
+                      <li *ngFor="let verb of vernList.Worte"><span class="pron">{{verb.pron}}</span> <span class="verb">{{verb.verb}} 🔊</span>
+                  </li>
+                </ul>
+
+              </div>
+
+
+        </ion-row>
+    </ion-grid>
+
+
+
+
+  </ion-content>
+
+  
+  <router-outlet></router-outlet>

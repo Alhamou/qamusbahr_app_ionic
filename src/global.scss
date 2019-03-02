@@ -1,0 +1,27 @@
+// http://ionicframework.com/docs/theming/
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+.searchbar-search-icon { 
+    padding: 0px 10px 0px 0px !important;
+    // background-image: url('https://qamusbahr.com/icons/flags/de.svg');
+}
+$app-direction: multi;
+
+
+.searchbar-search-icon  {
+    display: none;
+    height:0px;
+    width:0px;
+}
+.searchbar-input.sc-ion-searchbar-md {
+    padding: 6px 8px!important;
+    border-radius: 5px;
+}

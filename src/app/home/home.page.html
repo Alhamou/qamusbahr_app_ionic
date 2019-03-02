@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+      <ion-buttons slot="end">
+        <p class="textLogo">قاموس بحر</p>
+        <ion-img class="imgLogo" src="assets/b7r.svg"></ion-img>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <ion-buttons class="countNavSearch">
+    <img class="flagImg" src="assets/de.svg">
+    <ion-searchbar (ionFocus)="focus()" class="inputSearch" type="search"></ion-searchbar>
+    <ion-button (click)="focus()" class="buttontSearch">بحث</ion-button>
+  </ion-buttons>
+</ion-content>
+<router-outlet></router-outlet>
